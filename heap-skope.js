@@ -51,21 +51,22 @@ const gemHeapSkope = function () { // No parameter needed
             the gem mine, but make sure you stop when there
             are no minerals left.
             */
+            // create a variable to hold the amount of gems for each order
             let materialAmount = 0;
-            /* 5kg, or more, of the mineral remaining? */
+            /* Check if there are more than 5kg of the mineral remaining */
             if (GemMine[requestedMineral].kilograms >= 5) {
-                /*
-                You can reference the `GemMine` variable here
-                because it lives in an outer scope:
-                e.g. GemMine[requestedMineral].kilograms
-                */
+                // subtract 5 from the total amount of kilograms
                 GemMine[requestedMineral].kilograms -= 5;
+                //make the gemOrder amount 5kg
                 materialAmount = 5;
-                // console.log("GemMine[requestedMineral more or equal 5", GemMine[requestedMineral])
+               
+            // check if there are less than 5 and more than 0 gems left
             } else if (GemMine[requestedMineral].kilograms > 0) {
+                // assign the current gem amount to the amount to use for order
                 materialAmount = GemMine[requestedMineral].kilograms
+                // make the remaining amount of gems 0, in case we don't know what the remainder is
                 GemMine[requestedMineral].kilograms = 0;
-                // console.log("GemMine[requestedMineral less than 5", GemMine[requestedMineral])
+                
             }
 
             return {
@@ -93,7 +94,6 @@ left in the gem mine.
 Create a generator for 30 storage containers, which is how many a hëap-skope
 is equipped with.
 */
-
 const gemContainerGenerator = function* () {
     let currentContainer = 1
     const maximumContainers = 30
