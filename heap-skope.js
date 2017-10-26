@@ -120,12 +120,13 @@ let currentContainerAmount = 0
 
 // Loop over array gemSequence and run function for each gem. When the amount of gems in the gemOrder is 0, move to the next gem in the sequence
 gemSequence.forEach(function (gem) {
-    //create dummy initial order to get loop started and then hold the gemOrder.amount after each order
-    let gemOrder = { "amount": 1 };
+    
+    // No need for this dummy initial order if we structure our loop as a "Do While" and not a "While". 
+    // //create dummy initial order to get loop started and then hold the gemOrder.amount after each order
+    // let gemOrder = { "amount": 1 };
 
     // loop to fill this container until until the gemOrder total is 0, meaning no gems left of that type.
-    while (gemOrder.amount > 0) {
-        
+    do {  
         // run an order to process gems
         gemOrder = SkopeManager.process(gem)
         
@@ -148,7 +149,7 @@ gemSequence.forEach(function (gem) {
             // increment the currentContainerAmount to reflect this first order
             currentContainerAmount = gemOrder.amount;
         }
-    }
+    } while (gemOrder.amount > 0) 
 
 })  // END OF forEach Function
 
