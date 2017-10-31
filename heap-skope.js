@@ -1,8 +1,7 @@
 console.log("You are awesome!")
 
-const gemHeapSkope = function () { // No parameter needed
-    // Resource contained inside
-
+const gemHeapSkope = function () { 
+    // No parameter needed Resource contained inside
 
     /*
     The gem mine does not exist outside the barricade of the
@@ -66,7 +65,6 @@ const gemHeapSkope = function () { // No parameter needed
                 materialAmount = GemMine[requestedMineral].kilograms
                 // make the remaining amount of gems 0, in case we don't know what the remainder is
                 GemMine[requestedMineral].kilograms = 0;
-                
             }
 
             return {
@@ -159,15 +157,11 @@ processedOrders.forEach( function(order){
     }
 })
 
-// Need to catch a container that isn't totally full, and then push to final heapSkopeContainer array
-//debugger
-
+// Check if a currentContainer exists and is not undefinted AND if this container is partially full, and then push to final heapSkopeContainer array
 if (currentContainer && currentContainer.orders.length > 0) {
     // push this last container into the heapSkopeContainers array
     heapSkopeContainers.push(currentContainer)
 }
-
-//check if there is a container that has processed gems but wasn't pushed since it's not totally full. 
 
 console.log("heapSkopeContainers: ", heapSkopeContainers)
 
