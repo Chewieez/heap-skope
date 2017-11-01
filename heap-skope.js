@@ -3,6 +3,7 @@ console.log("You are awesome!")
 const gemHeapSkope = function () { 
     // No parameter needed Resource contained inside
 
+
     /*
     The gem mine does not exist outside the barricade of the
     hëap-skopes. The Lexscopistanians build the barricade
