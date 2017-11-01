@@ -50,18 +50,6 @@ const gemHeapSkope = function () {
     requested mineral from the enclosed GemMine above.
     */
 
-    // const elementsWeProduce = []
-
-    // for (mine in GemMine) {
-    //     for (mineral in mine) {
-    //         elementsWeProduce.push(mineral);
-    //     }
-    // }
-
-    // return elementsWeProduce
-
-
-
 
     return Object.create(null, {
         products: {
@@ -132,16 +120,71 @@ const gemOrders = []
 console.log("SkopeManager.products", SkopeManager.products)
 
 SkopeManager.products.forEach(mineral => {
-            let processResult = null
-            do {
-                processResult = SkopeManager.process(mineral)
-                if (processResult.amount > 0) gemOrders.push(processResult)
-            } while (processResult.amount === 5)
-        })
+    let processResult = null
+    do {
+        processResult = SkopeManager.process(mineral)
+        if (processResult.amount > 0) gemOrders.push(processResult)
+    } while (processResult.amount === 5)
+})
 
-           
-        
-            console.log("gemOrders: ", gemOrders)
-            
+console.log("gemOrders: ", gemOrders)
 
 
+
+
+/*
+Create a generator for 30 storage containers, which is how many a hëap-skope
+is equipped with.
+*/
+const gemContainerGenerator = function* () {
+    let currentContainer = 1
+    const maximumContainers = 30;
+    
+    while (currentContainer <= maximumContainers) {
+        yield { "id": currentContainer, "type": "Mineral", "orders": [] }
+        currentContainer++
+    }
+}
+// create instance of gemContainerGenerator
+const gemContainerFactory = gemContainerGenerator()
+
+// create a new container
+let currentContainer = gemContainerFactory.next().value;
+
+// create currentContainerAmount to hold the amount of total kilograms in the container
+let currentContainerAmount = 0;
+
+// create final array to hold all of the containers. 
+let heapSkopeContainers = [];
+
+
+// put the processed orders into containers
+gemOrders.forEach( order => {
+    
+      // check if currentContainer is not undefined, which means we are not out of available containers
+      if (currentContainer) { 
+  
+          // push an order into the container
+          currentContainer.orders.push(order);
+  
+          // increment the size of the current container to reflect this added order
+          currentContainerAmount += order.amount;
+              
+          // check that the currentContainer plus the current order are more than what will fit in one container. If it is, push this full container to the heapSkopeContainers array and then create a new container
+          if (currentContainerAmount + order.amount > 565) {
+              // container is now full, push container to keapSkopeContainers
+              heapSkopeContainers.push(currentContainer)
+              // create a new container
+              currentContainer = gemContainerFactory.next().value;
+              currentContainerAmount = 0;
+          }   
+      }
+  })
+  
+  // Check if a currentContainer exists and is not undefinted AND if this container is partially full, and then push to final heapSkopeContainer array
+  if (currentContainer && currentContainer.orders.length > 0) {
+      // push this last container into the heapSkopeContainers array
+      heapSkopeContainers.push(currentContainer)
+  }
+  
+console.log("heapSkopeContainers: ", heapSkopeContainers)
