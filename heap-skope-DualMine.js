@@ -119,13 +119,23 @@ const gemOrders = []
 
 console.log("SkopeManager.products", SkopeManager.products)
 
+// SkopeManager.products.forEach(mineral => {
+//     let processResult = null
+//     do {
+//         processResult = SkopeManager.process(mineral)
+//         if (processResult.amount > 0) gemOrders.push(processResult)
+//     } while (processResult.amount === 5)
+// })
+
 SkopeManager.products.forEach(mineral => {
-    let processResult = null
     do {
-        processResult = SkopeManager.process(mineral)
-        if (processResult.amount > 0) gemOrders.push(processResult)
-    } while (processResult.amount === 5)
+        // loop to fill this container until until the gemOrder total is 0, meaning no gems left of that type.
+        // run an order to process gems
+        processResults = SkopeManager.process(mineral)
+       gemOrders.push(processResults)
+    } while (processResults.amount >= 5)
 })
+
 
 console.log("gemOrders: ", gemOrders)
 
