@@ -49,18 +49,35 @@ const gemHeapSkope = function () {
     function is invoked, subtract 5 from the amount of the
     requested mineral from the enclosed GemMine above.
     */
+
+    // const elementsWeProduce = []
+
+    // for (mine in GemMine) {
+    //     for (mineral in mine) {
+    //         elementsWeProduce.push(mineral);
+    //     }
+    // }
+
+    // return elementsWeProduce
+
+
+
+
     return Object.create(null, {
-        Mines: {
-            get: () => Object.keys(GemMine)
-        },
-        Mine1: {
-            get: () => Object.keys(GemMine.Mine1),
-        },
-        Mine2: {
-            get: () => Object.keys(GemMine.Mine2)
+        products: {
+            get: () => {
+                const elementsWeProduce = []
+            
+                for (mine in GemMine) {
+                    for (mineral in GemMine[mine]) {
+                        elementsWeProduce.push(mineral);   
+                    }    
+                }    
+                return elementsWeProduce
+            }
         },
         process: {
-            value: function (requestedMineral, mineNum) {
+            value: function (requestedMineral) {
                 
                 /*
                 Subtract 5 from the total kilograms available in
@@ -69,22 +86,27 @@ const gemHeapSkope = function () {
                 */
                 // create a variable to hold the amount of gems for each order
                 let materialAmount = 0;
+                //debugger
+
                 /* Check if there are more than 5kg of the mineral remaining */
-                if (GemMine[mineNum][requestedMineral].kilograms >= 5) {
-                    //make the gemOrder amount 5kg
-                    materialAmount = 5;
-                
-                // check if there are less than 5 and more than 0 gems left
-                } else if (GemMine[mineNum][requestedMineral].kilograms > 0) {
-                    // assign the current gem amount to the amount to use for order
-                    materialAmount = GemMine[mineNum][requestedMineral].kilograms
-                }
+                for (mine in GemMine) {
+                    if (GemMine[mine].hasOwnProperty(requestedMineral)) {
+                        if (GemMine[mine][requestedMineral].kilograms >= 5) {
+                            //make the gemOrder amount 5kg
+                            materialAmount = 5;
+                        // check if there are less than 5 and more than 0 gems left
+                        } else if (GemMine[mine][requestedMineral].kilograms > 0) {
+                            // assign the current gem amount to the amount to use for order
+                            materialAmount = GemMine[mine][requestedMineral].kilograms
+                        }
 
-                GemMine[mineNum][requestedMineral].kilograms -= materialAmount;
-
-                return {
-                    "mineral": requestedMineral,
-                    "amount": materialAmount 
+                        GemMine[mine][requestedMineral].kilograms -= materialAmount;
+                    
+                        return {
+                            "mineral": requestedMineral,
+                            "amount": materialAmount 
+                        }
+                    }
                 }
             }
         }
@@ -104,31 +126,22 @@ const SkopeManager = gemHeapSkope()
 */
 const gemOrders = []
 
-console.log("SkopeManager.Mine1", SkopeManager.Mine1)
-console.log("SkopeManager.Mine2", SkopeManager.Mine2)
-console.log("SkopeManager.Mines", SkopeManager.Mines)
 
 
-SkopeManager.Mine1.forEach(
-    mineral => {
-        let processResult = null
-        do {
-            processResult = SkopeManager.process(mineral, "Mine1")
-            if (processResult.amount > 0) gemOrders.push(processResult)
-        } while (processResult.amount === 5)
-    }
-)
 
-SkopeManager.Mine2.forEach(
-    mineral => {
-        let processResult = null
-        do {
-            processResult = SkopeManager.process(mineral, "Mine2")
-            if (processResult.amount > 0) gemOrders.push(processResult)
-        } while (processResult.amount === 5)
-    }
-)
-            
+console.log("SkopeManager.products", SkopeManager.products)
+
+SkopeManager.products.forEach(mineral => {
+            let processResult = null
+            do {
+                processResult = SkopeManager.process(mineral)
+                if (processResult.amount > 0) gemOrders.push(processResult)
+            } while (processResult.amount === 5)
+        })
+
+           
+        
             console.log("gemOrders: ", gemOrders)
             
+
 
