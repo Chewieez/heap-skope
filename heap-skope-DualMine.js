@@ -16,18 +16,18 @@ const gemHeapSkope = function () {
     const GemMine = {
         "Mine1": {
             "Coal": {
-                "kilograms": 5302
+                "kilograms": 50302
             },
             "Gold": {
-                "kilograms": 2775
+                "kilograms": 20775
             }
         },
         "Mine2": {
             "Iron": {
-                "kilograms": 3928
+                "kilograms": 30928
             },
             "Copper": {
-                "kilograms": 901
+                "kilograms": 9001
             }
         }
     }
@@ -168,33 +168,42 @@ let currentContainerAmount = 0;
 let heapSkopeContainers = [];
 
 
+// Used a For loop here to have the ability to break out of the loop once containers are full. This way we are not wasting resources looping over a potentially huge array after we've filled our 30 containers.
+
 // put the processed orders into containers
-gemOrders.forEach( order => {
+for (let i = 0; i < gemOrders.length; i++) {
+    let order = gemOrders[i];
+    // check if currentContainer is not undefined, which means we are not out of available containers
+    if (currentContainer) { 
+        
+        // push an order into the container
+        currentContainer.orders.push(order);
+        
+        // increment the size of the current container to reflect this added order
+        currentContainerAmount += order.amount;
+        
+        // check that the currentContainer plus the current order are more than what will fit in one container. If it is, push this full container to the heapSkopeContainers array and then create a new container
+        if (currentContainerAmount + order.amount > 565) {
+            // container is now full, push container to keapSkopeContainers
+            heapSkopeContainers.push(currentContainer)
+            // create a new container
+            currentContainer = gemContainerFactory.next().value;
+            currentContainerAmount = 0;
+        }   
+    } else {
+        break;
+    }
     
-      // check if currentContainer is not undefined, which means we are not out of available containers
-      if (currentContainer) { 
-  
-          // push an order into the container
-          currentContainer.orders.push(order);
-  
-          // increment the size of the current container to reflect this added order
-          currentContainerAmount += order.amount;
-              
-          // check that the currentContainer plus the current order are more than what will fit in one container. If it is, push this full container to the heapSkopeContainers array and then create a new container
-          if (currentContainerAmount + order.amount > 565) {
-              // container is now full, push container to keapSkopeContainers
-              heapSkopeContainers.push(currentContainer)
-              // create a new container
-              currentContainer = gemContainerFactory.next().value;
-              currentContainerAmount = 0;
-          }   
-      }
-  })
-  
-  // Check if a currentContainer exists and is not undefinted AND if this container is partially full, and then push to final heapSkopeContainer array
-  if (currentContainer && currentContainer.orders.length > 0) {
-      // push this last container into the heapSkopeContainers array
-      heapSkopeContainers.push(currentContainer)
-  }
+}
+    
+//gemOrders.forEach( order => {
+// }) // end of forEach code 
+
+
+// Check if a currentContainer exists and is not undefined AND if this container is partially full, is so, push to final heapSkopeContainer array
+if (currentContainer && currentContainer.orders.length > 0) {
+    // push this last container into the heapSkopeContainers array
+    heapSkopeContainers.push(currentContainer)
+}
   
 console.log("heapSkopeContainers: ", heapSkopeContainers)
